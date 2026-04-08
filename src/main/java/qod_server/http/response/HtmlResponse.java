@@ -9,7 +9,7 @@ public class HtmlResponse extends Response{
 
     @Override
     public String getResponseString() {
-        String response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+        String response = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n";
         response += html;
 
         return response;

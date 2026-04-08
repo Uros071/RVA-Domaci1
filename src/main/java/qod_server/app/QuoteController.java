@@ -1,5 +1,7 @@
 package qod_server.app;
 
+import com.google.gson.Gson;
+import qod_server.Quote;
 import qod_server.http.Request;
 import qod_server.http.response.HtmlResponse;
 import qod_server.http.response.RedirectResponse;
@@ -19,9 +21,21 @@ public class QuoteController extends Controller{
     @Override
     public Response doGet() {
         String qodJson = getQOD();
+        String autor = "";
+        String citat = "";
+
+        try{
+            Gson gson = new Gson();
+            Quote quote = gson.fromJson(qodJson, Quote.class);
+            autor = quote.getAuthor();
+            citat = quote.getText();
+        }catch (Exception e){
+            citat = "Greska pri parsiranju citata: " + qodJson;
+        }
 
         String htmlBody = "<h1>Quote of the day:</h1>" +
-                "<p>" + qodJson + "</p>" +
+                "<h2>" + autor + "</h2>" +
+                "<p>" + citat + "</p>" +
                 "<hr>" +
                 "<h2>Save a new quote</h2>" +
                 "<form method=\"POST\" action=\"/save-quote\">" +
@@ -30,7 +44,7 @@ public class QuoteController extends Controller{
                 "<button>Save Quote</button>" +
                 "</form>";
 
-        String content = "<html><head><title>Quotes Management</title></head>\n";
+        String content = "<html><head><meta charset=\"UTF-8\"><title>Quotes</title></head>\n";
         content += "<body>" + htmlBody + "</body></html>";
 
         return new HtmlResponse(content);
@@ -45,7 +59,7 @@ public class QuoteController extends Controller{
     private String getQOD() {
         try{
             Socket socket = new Socket("localhost", 8081);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             out.print("GET / HTTP/1.1\r\nHost: localhost:8081\r\n\r\n");

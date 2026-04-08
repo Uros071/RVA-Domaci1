@@ -17,8 +17,8 @@ public class QuoteServerThread implements Runnable{
         this.client = socket;
         try {
 
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())), true);
+            in = new BufferedReader(new InputStreamReader(client.getInputStream(), "UTF-8"));
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8")), true);
 
         }catch (IOException e){
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class QuoteServerThread implements Runnable{
 
             Gson gson = new Gson();
             String jsonResponse = gson.toJson(qod);
-            out.print("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n");
+            out.print("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n");
             out.print(jsonResponse);
             out.flush();
 

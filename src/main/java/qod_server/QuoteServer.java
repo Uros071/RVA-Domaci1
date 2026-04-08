@@ -16,7 +16,7 @@ public class QuoteServer {
             System.out.println("QOD Server radi na portu: " + TCP_PORT);
             while (true) {
                 Socket sock = ss.accept();
-                new Thread(new ServerThread(sock)).start();
+                new Thread(new QuoteServerThread(sock)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
