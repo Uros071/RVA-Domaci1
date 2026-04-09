@@ -37,25 +37,31 @@ public class ServerThread implements Runnable{
             String requestLine = in.readLine();
 
             StringTokenizer stringTokenizer = new StringTokenizer(requestLine);
-
             String method = stringTokenizer.nextToken();
             String path = stringTokenizer.nextToken();
+
+            int contentLength = 0;
 
             System.out.println("\nHTTP ZAHTEV KLIJENTA:\n");
             do {
                 System.out.println(requestLine);
+
+                if (requestLine.startsWith("Content-Length:"))
+                    contentLength = Integer.parseInt(requestLine.split(":")[1].trim());
+
                 requestLine = in.readLine();
             } while (!requestLine.trim().equals(""));
 
+            Request request = new Request(HttpMethod.valueOf(method), path);
+
             if (method.equals(HttpMethod.POST.toString())) {
 //                 TODO: Ako je request method POST, procitaj telo zahteva (parametre)
-                char[] buffer = new char[22];
+                char[] buffer = new char[contentLength];
                 in.read(buffer);
-                String s  = new String(buffer);
-                System.out.println(s);
+                String body  = new String(buffer);
+                request.setBody(body);
+                System.out.println(body);
             }
-
-            Request request = new Request(HttpMethod.valueOf(method), path);
 
             RequestHandler requestHandler = new RequestHandler();
             Response response = requestHandler.handle(request);
