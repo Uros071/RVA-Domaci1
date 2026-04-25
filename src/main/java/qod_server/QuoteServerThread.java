@@ -38,7 +38,8 @@ public class QuoteServerThread implements Runnable{
             quotes.add(new Quote("Duško Vujošević", "Džaba vam novci moji sinovci."));
             quotes.add(new Quote("Michael Jordan", "Promašio sam preko 9000 šuteva u svojoj karijeri. Izgubio sam skoro 300 utakmica. 26 puta su mi verovali da šutnem za pobedu i ja sam promašio. Nisam uspeo iznova i iznova u životu, to je razlog zašto sam uspeo."));
 
-            int quoteIndex = (int)Math.random() * quotes.size();
+            int quoteIndex = (int)Math.floor(Math.random() * quotes.size());
+            System.out.println("Quote index ----> " + quoteIndex);
             Quote qod = quotes.get(quoteIndex);
 
             Gson gson = new Gson();
